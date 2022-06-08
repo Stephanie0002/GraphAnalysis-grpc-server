@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package algorithm;
+
+// The greeting service definition.
+service Algorithm {
+  // Sends a greeting
+  rpc ExecuteAlgorithm (AlgorithmRequest) returns (AlgorithmReply) {}
+  rpc SparkQueryState (SparkQueryRequest) returns (SparkQueryReply) {}
+  // rpc GetHDFSResult (GetResultRequest) returns (ResultReply) {}
+}
+
+// The request message containing algorithm_id and args.
+message AlgorithmRequest {
+  int64 algorithm_id = 1;
+  map<string,string> kwargs = 2;
+  bool use_cache = 3;
+}
+
+// The response message of exe algorithm
+message AlgorithmReply {
+  string state = 1;
+  int64 timestamp=2;
+  string app_id = 3;
+  string hdfs_path = 4;
+  string message = 5;
+}
+
+// The request message containing app_id
+message SparkQueryRequest {
+  string app_id=1;
+}
+
+// The response message of the state of spark app
+message SparkQueryReply {
+  string state = 1;
+  string finalStatus = 2;
+}
+
+//TODO: 加上结果请求
+// The request message containing hdfs_path
+// message GetResultRequest {
+//   bytes hdfs_path=1;
+// }
+
+// // The response message of the result
+// message ResultReply {
+//   // string state = 1;
+//   // string finalStatus = 2;
+// }
