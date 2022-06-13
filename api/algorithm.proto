@@ -9,14 +9,27 @@ service Algorithm {
   rpc SparkQueryState (SparkQueryRequest) returns (SparkQueryReply) {}
   // rpc GetHDFSResult (GetResultRequest) returns (ResultReply) {}
 }
-
+service DataPipe{
+  rpc Replay (ReplayRequest) returns (ReplayReply){}
+}
+//The request message of replay containing start_timestamp and end_timestamp
+message ReplayRequest {
+  string dataset_name = 1;
+  string topic_name = 2;
+  int64 start_timestamp = 3;
+  int64 end_timestamp = 4;
+}
 // The request message containing algorithm_id and args.
 message AlgorithmRequest {
   int64 algorithm_id = 1;
   map<string,string> kwargs = 2;
   bool use_cache = 3;
 }
-
+//The reply message for the date on which the data is replaying right now
+message ReplayReply {
+  string result= 1;//成功返回'SUCCESS',失败返回'FAIL'
+  string error_info=2;
+}
 // The response message of exe algorithm
 message AlgorithmReply {
   string state = 1;
