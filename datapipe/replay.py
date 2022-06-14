@@ -2,7 +2,7 @@
 Author: Shawshank980924 Akatsuki980924@163.com
 Date: 2022-06-09 10:55:57
 LastEditors: Shawshank980924 Akatsuki980924@163.com
-LastEditTime: 2022-06-13 19:01:06
+LastEditTime: 2022-06-14 18:52:14
 FilePath: /sxx/grpc_demo/grpc_server/datapipe/replay.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%A
 '''
@@ -40,7 +40,7 @@ def orc2kafka(path,topic):
     .master('local') \
     .getOrCreate()
     # df.show(20)
-    spark.read.orc(path).orderBy('timestamp').rdd.foreachPartition(functools.partial(go2kafka,topic=topic))
+    spark.read.orc(path).orderBy('timestamp').rdd.coalesce(1).foreachPartition(functools.partial(go2kafka,topic=topic))
     # for row in df.collect():
     #     producer.send(topic,bytes(row[0]))
     
@@ -71,6 +71,6 @@ def go2kafka(partition,topic):
 # # t2=datetime.datetime.now()
 # print(count)  
 # print((t2-t1).total_seconds())
-admin = KafkaAdminClient(bootstrap_servers=['hpc01:9092','hpc02:9092','hpc03:9092','hpc04:9092','hpc05:9092','hpc06:9092','hpc07:9092','hpc08:9092','hpc09:9092','hpc10:9092'],api_version=(2,6,0))
-print(admin.delete_topics(admin.list_topics()))
+# admin = KafkaAdminClient(bootstrap_servers=['hpc01:9092','hpc02:9092','hpc03:9092','hpc04:9092','hpc05:9092','hpc06:9092','hpc07:9092','hpc08:9092','hpc09:9092','hpc10:9092'],api_version=(2,6,0))
+# print(admin.delete_topics(admin.list_topics()))
 
