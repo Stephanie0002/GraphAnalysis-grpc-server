@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-import algorithm_pb2 as algorithm__pb2
+from api import algorithm_pb2 as algorithm__pb2
 
 
 class AlgorithmStub(object):

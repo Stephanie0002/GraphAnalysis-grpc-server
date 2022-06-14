@@ -10,7 +10,7 @@ service Algorithm {
   // rpc GetHDFSResult (GetResultRequest) returns (ResultReply) {}
 }
 service DataPipe{
-  rpc Replay (ReplayRequest) returns (ReplayReply);
+  rpc Replay (ReplayRequest) returns (ReplayReply){}
 }
 //The request message of replay containing start_timestamp and end_timestamp
 message ReplayRequest {
