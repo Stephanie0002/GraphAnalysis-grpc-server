@@ -2,7 +2,7 @@
 Author: Shawshank980924 Akatsuki980924@163.com
 Date: 2022-06-09 08:33:42
 LastEditors: Shawshank980924 Akatsuki980924@163.com
-LastEditTime: 2022-06-14 14:31:59
+LastEditTime: 2022-06-14 19:06:29
 FilePath: /sxx/grpc_demo/grpc_server/test_server.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
@@ -127,7 +127,7 @@ def serve():
        reflection.SERVICE_NAME,
     )
     reflection.enable_server_reflection(SERVICE_NAMES, server)
-    server.add_insecure_port('[::]:50056')
+    server.add_insecure_port('[::]:50057')
     # 读入现有缓存的状态
     SparkManager.refreshCacheState(False)
     # 持续更新缓存状态 
