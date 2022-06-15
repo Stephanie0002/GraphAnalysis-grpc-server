@@ -146,17 +146,17 @@ class SparkManager(object):
         kwargs['partition']=str(edges//300000)
         kwargs['driver.extraJavaOptions']="-XX:PermSize=128M -XX:MaxPermSize=256M"  # 增大栈大小，防止堆栈溢出
         kwargs['dynamicAllocation.enabled']='false' # 禁用动态分配，避免长期不用excutor挂掉
-        kwargs['network.timeout']='1200' # 增大网络延时，避免计算耗时长导致excutor挂掉
+        kwargs['network.timeout']='3600' # 增大网络延时，避免计算耗时长导致excutor挂掉
 
         cores = 4 if algorithm_id in LargeMemoryConsumptions else 8
-        memory= 128
+        memory= 152
         return {"cores":cores, "memory":memory}
 
     # 执行大数据集部分数据的算法包
     def _getSparKARG_PartDataSet(algorithm_id: int, vertex:int ,kwargs):
         kwargs['partition']=str(vertex//300000)
         kwargs['dynamicAllocation.enabled']='false' # 禁用动态分配，避免长期不用excutor挂掉
-        kwargs['network.timeout']='1200' # 增大网络延时，避免计算耗时长导致excutor挂掉
+        kwargs['network.timeout']='3600' # 增大网络延时，避免计算耗时长导致excutor挂掉
         cores = 8
         memory= 84
         return {"cores":cores, "memory":memory}
