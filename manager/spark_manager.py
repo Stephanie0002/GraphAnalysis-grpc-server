@@ -60,7 +60,7 @@ class SparkManager(object):
         cur = connect.cursor()
         # query schema
         try:
-            query = "select * from meta where space_name=\"{}\"".format(space)
+            query = "select * from meta where space_id=\"{}\"".format(space)
             cur.execute(query)
         except Exception as e:
             print("查询数据失败:", e)
@@ -79,6 +79,7 @@ class SparkManager(object):
     def queryState(app_id)->str:
         url='http://{ip}:{port}/ws/v1/cluster/apps/{app_id}'\
             .format(ip=yarn_ip, port=yarn_port,app_id=app_id)
+        print("url"+url)
         try:
             res = request.urlopen(url)
             if res.status!=200:  # url get失败
