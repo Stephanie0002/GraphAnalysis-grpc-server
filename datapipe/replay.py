@@ -29,7 +29,7 @@ def DataReplay(begin_date,end_date,topic_name):
     while begin_date <= end_date:
         print(begin_date)
         y,m,d = begin_date.strftime("%Y_%m_%d").split('_')
-        path = '/sxx/archive/{}/{}/{}.orc'.format(y,m,d)
+        path = '/sxx/replay/trans/{}/{}/{}.orc'.format(y,m,d)
         orc2kafka(path,topic_name)
         begin_date+=delta
         

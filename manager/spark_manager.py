@@ -79,15 +79,17 @@ class SparkManager(object):
     def queryState(app_id)->str:
         url='http://{ip}:{port}/ws/v1/cluster/apps/{app_id}'\
             .format(ip=yarn_ip, port=yarn_port,app_id=app_id)
-        print("url"+url)
+        logging.info("query url: "+url)
         try:
             res = request.urlopen(url)
             if res.status!=200:  # url get失败
                 return None, 'HTTPStatus: {}  Query Failed!!!'.format(res.status)
         except error.HTTPError as e:
+            logging.error(e)
             print(e)
             return None, 'HTTPStatus: {}  Query Failed!!!'.format(e.code)   
         except Exception as e:
+            logging.error(e)
             print(e)
             return None, 'Query Failed!!! {}'.format(str(e))
         else:
@@ -138,8 +140,9 @@ class SparkManager(object):
     def _getSparKARG_SmallDataSet(algorithm_id: int, edges:int, kwargs)->str:
         # str(schema[1]//300000) if schema[1]>30000000 else 
         kwargs['partition']='200'
-        cores = 8
-        memory= 16 if edges<300000 else 32
+        cores = 4 if algorithm_id in LargeMemoryConsumptions else 8
+        memory= 32 if edges<300000 else 64
+        # memory= memory+16 if algorithm_id in LargeMemoryConsumptions else memory
         return {"cores":cores, "memory":memory}
 
     # 执行大数据集的算法包
@@ -158,8 +161,8 @@ class SparkManager(object):
         kwargs['partition']=str(vertex//300000)
         kwargs['dynamicAllocation.enabled']='false' # 禁用动态分配，避免长期不用excutor挂掉
         kwargs['network.timeout']='3600' # 增大网络延时，避免计算耗时长导致excutor挂掉
-        cores = 8
-        memory= 84
+        cores = 4 if algorithm_id in LargeMemoryConsumptions else 8
+        memory= 96
         return {"cores":cores, "memory":memory}
 
     # 执行spark算法，获得结果地址
@@ -216,5 +219,6 @@ class SparkManager(object):
             # print(app_id, hdfs_path)
             return str(app_id), hdfs_path
         except Exception as e:
+            logging.error(e)
             print(e)
             return None, str(e)

@@ -6,6 +6,7 @@ LastEditTime: 2022-06-14 19:06:29
 FilePath: /sxx/grpc_demo/grpc_server/test_server.py
 Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 '''
+from cmath import log
 from concurrent import futures
 from ensurepip import bootstrap
 import logging
@@ -53,6 +54,7 @@ class Algorithm(algorithm_pb2_grpc.AlgorithmServicer):
                 message='算法执行失败! spark在accept前失败!'
             )
         else: # executing, wait for result
+            logging.info(str(app_id) + str(hdfs_path))
             print(app_id, hdfs_path)
             return algorithm_pb2.AlgorithmReply(
                 state='started', 
@@ -65,6 +67,7 @@ class Algorithm(algorithm_pb2_grpc.AlgorithmServicer):
     def ExecuteAlgorithm(self, request, context):
         timeArray = time.localtime(time.time())
         timeStr = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
+        logging.info(timeStr+":: Get Request: " + str(request.algorithm_id) + str(request.kwargs))
         print(timeStr+":: Get Request: ", request.algorithm_id, request.kwargs)
         if request.algorithm_id >= spark_algorithm_begin_id:
             app_id, hdfs_path=SparkManager.executeSpark(request.algorithm_id, request.use_cache, request.kwargs)
@@ -79,6 +82,7 @@ class Algorithm(algorithm_pb2_grpc.AlgorithmServicer):
         timeStr = time.strftime("%Y-%m-%d %H:%M:%S", timeArray)
         app_id = request.app_id
         state, finalStatus = SparkManager.queryState(app_id=app_id)
+        logging.info(timeStr+":: Get Request: " + str(app_id) + state + finalStatus)
         print(timeStr+":: Get Request: ", app_id, state, finalStatus)
         return algorithm_pb2.SparkQueryReply(state=state, finalStatus=finalStatus)
     
@@ -124,20 +128,22 @@ def serve():
     # the reflection service will be aware of "Greeter" and "ServerReflection" services.
     SERVICE_NAMES = (
         algorithm_pb2.DESCRIPTOR.services_by_name['Algorithm'].full_name,
-       reflection.SERVICE_NAME,
+        algorithm_pb2.DESCRIPTOR.services_by_name['DataPipe'].full_name,
+        reflection.SERVICE_NAME,
     )
     reflection.enable_server_reflection(SERVICE_NAMES, server)
-    server.add_insecure_port('[::]:50057')
+    server.add_insecure_port('10.75.75.11:50059')
     # 读入现有缓存的状态
     SparkManager.refreshCacheState(False)
     # 持续更新缓存状态 
     t1 = threading.Thread(target=SparkManager.refreshCacheState, args=(True,))
     t1.start()
     server.start()
+    logging.info("Wait for request...")
     print("Wait for request...")
     server.wait_for_termination()
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.INFO, filename='data/info.log', filemode='a')
     serve()

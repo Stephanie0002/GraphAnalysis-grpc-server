@@ -96,7 +96,7 @@ algorithm_jar_path = (
     '../algorithm/AvgClusteringCoefficient.jar', # 17
     '../algorithm/BFS.jar', # 18
     '../algorithm/DegreeCentrality.jar', # 19
-    '', # 20
+    '../algorithm/Closeness.jar', # 20
     '', # 21
     '../algorithm/PageRank.jar', # 22
     '../algorithm/LabelPropagation.jar', # 23
@@ -127,4 +127,7 @@ LargeMemoryConsumptions = set([AlgorithmID.GlobalClusteringCoefficient.value,
                                AlgorithmID.LocalClusteringCoefficient.value,
                                AlgorithmID.AvgClusteringCoefficient.value,
                                AlgorithmID.TriangleCount.value,
-                               AlgorithmID.ShortestPath.value])
+                               AlgorithmID.ShortestPath.value,
+                               AlgorithmID.Closeness.value,
+                               AlgorithmID.LabelPropagation.value,
+                               AlgorithmID.BFS.value])
